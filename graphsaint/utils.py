@@ -1,6 +1,7 @@
 import json
 import os
-from functools import namedtuple
+# from functools import namedtuple  #####
+from collections import namedtuple
 import scipy.sparse
 from sklearn.preprocessing import StandardScaler
 import dgl
@@ -54,15 +55,14 @@ def evaluate(model, g, labels, mask, multilabel=False):
                                  logits.cpu().numpy(), multilabel)
         return f1_mic, f1_mac
 
-
 # load data of GraphSAINT and convert them to the format of dgl
 def load_data(args, multilabel):
     if not os.path.exists('graphsaintdata') and not os.path.exists('data'):
         raise ValueError("The directory graphsaintdata does not exist!")
     elif os.path.exists('graphsaintdata') and not os.path.exists('data'):
         os.rename('graphsaintdata', 'data')
-    # prefix = "data/{}".format(args.dataset)#################################
-    prefix = "data/ppi"#################################
+    prefix = "data/{}".format(args.dataset)#################################
+    # prefix = "data/ppi"#################################
     DataType = namedtuple('Dataset', ['num_classes', 'train_nid', 'g'])
 
     adj_full = scipy.sparse.load_npz('./{}/adj_full.npz'.format(prefix)).astype(bool)#################
