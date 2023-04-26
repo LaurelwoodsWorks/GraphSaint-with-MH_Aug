@@ -5,6 +5,10 @@ import scipy
 import torch as th
 import dgl
 
+# if __name__ == '__main__':
+#     from modules import AGGNet
+# else:
+#     from Juyeong.modules import AGGNet
 from modules import AGGNet
 from scipy.stats import truncnorm
 import torch.nn as nn
@@ -99,10 +103,12 @@ def generate_aug_graph(g, model,
         aug_g, aug_n_list = augment(g, delta_G_e_aug, delta_G_v_aug)
         aug_g = dgl.add_self_loop(aug_g)
 
-        message_passing_g = copy.deepcopy(g)
+        # message_passing_g = copy.deepcopy(g)
+        message_passing_g = g.clone()
         message_passing_g.ndata['feat'] = th.ones(num_nodes, 1, device='cuda:0')
 
-        message_passing_aug_g = copy.deepcopy(aug_g)
+        # message_passing_aug_g = copy.deepcopy(aug_g)
+        message_passing_aug_g = aug_g.clone()
         message_passing_aug_g.ndata['feat'] = th.ones(num_nodes, 1, device='cuda:0')
 
         # Calculate ego-graph's message passing value

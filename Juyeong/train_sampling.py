@@ -115,6 +115,7 @@ def main(args, task):
     best_f1 = -1
 
     subg_t = [[] for _ in range(2)]
+    # subg_t = torch.empty((1, 2), dtype=torch.int32).to(torch.cuda.current_device())
 
     h_loss_op = HLoss()
     js_loss_op = Jensen_Shannon()
@@ -127,8 +128,11 @@ def main(args, task):
             if epoch == 0:
                 subg_t[0].append(copy.deepcopy(subg))
             else:
-                subg_t[0].append(copy.deepcopy(subg_t[1][j]))
+                subg_t[0].append(copy.deepcopy(subg_t[1][j])) 
+                ### ???
+                # subg_t[0] = copy.deepcopy(subg_t[1][j]) 
 
+            ### Shouldn't subg_t[0][j] be subg_t[0][-1][j] ???
             auged_subg, delta_G_e, delta_G_v, delta_G_e_aug, delta_G_v_aug \
                 = generate_aug_graph(subg_t[0][j], model,
                                      args.sigma_delta_e, args.sigma_delta_v, args.mu_e, args.mu_v,

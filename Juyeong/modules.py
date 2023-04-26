@@ -3,6 +3,7 @@ import torch.nn.functional as F
 import torch as th
 from dgl.nn.pytorch.conv import GraphConv
 import dgl.function as fn
+import dgl
 
 
 class GCNLayer(nn.Module):
@@ -123,16 +124,18 @@ class AGGNet(nn.Module):
             self.bns = nn.ModuleList()
             self.bns.append(nn.BatchNorm1d(hidden_feats))
 
-        self.convs.append(GraphConv(in_feats, out_feats))
+        self.convs.append(GraphConv(in_feats, out_feats, allow_zero_in_degree=True))
 
         for _ in range(self.num_hop - 1):
             if self.use_bn:
                 self.bns.append(nn.BatchNorm1d(hidden_feats))
-            self.convs.append(GraphConv(out_feats, out_feats))
+            self.convs.append(GraphConv(out_feats, out_feats, allow_zero_in_degree=True))
 
     def forward(self, graph):
         for i in range(self.num_hop - 1):
             feat = graph.ndata['feat']
+
+            # graph = dgl.add_self_loop(graph)
             feat = self.convs[i](graph, feat)
             if self.use_bn:
                 feat = self.bns[i](feat)
