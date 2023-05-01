@@ -219,7 +219,8 @@ if __name__ == '__main__':
     warnings.filterwarnings('ignore')
 
     parser = argparse.ArgumentParser(description='GraphSAINT')
-    parser.add_argument("--task", type=str, default="ppi_n", help="type of tasks")
+    # parser.add_argument("--task", type=str, default="ppi_n", help="type of tasks")
+    parser.add_argument("--task", type=str, default="flickr_n", help="type of tasks")
     parser.add_argument("--online", dest='online', action='store_true', help="sampling method in training phase")
     parser.add_argument("--gpu", type=int, default=0, help="the gpu index")
     task = parser.parse_args().task
